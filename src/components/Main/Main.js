@@ -33,19 +33,18 @@ function Main(props) {
 
   React.useEffect(() => {
     getUserInfo({setUserName, setUserDescription, setUserAvatar});
-  }, [userName, userDescription, userAvatar]);
+  }, []);
 
   React.useEffect(() => {
-    if (cards.length < 1) {
       getInitialCards(setCards);
-    }
-  });
+  }, []);
 
   return (
     <main className="content">
       <section className="profile">
         <div className="profile__personal-data">
           <div className="profile__avatar" style={{ backgroundImage: `url(${userAvatar})` }} >
+            <img className="profile__avatar-image" src={userAvatar} alt={`Аватар пользователя ${userName}`} />
             <button type="button" className="profile__avatar-edit-button" onClick={props.onEditAvatar} aria-label="Редактировать аватар"></button>
           </div>
           <div className="profile__info">

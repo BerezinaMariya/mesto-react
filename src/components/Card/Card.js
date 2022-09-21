@@ -8,11 +8,9 @@ function Card(props) {
 
   return (
     <li className="cardElement">
-      <img className="cardElement__image" style={{ backgroundImage: `url(${props.card.link})`}} onClick={handleClick} />
+      <img className="cardElement__image" src={props.card.link} onClick={handleClick} alt={`Фотография места ${props.card.name}`}/>
       <div className="cardElement__caption">
-        <h2 className="cardElement__title">
-          {props.card.name}
-        </h2>
+        <h2 className="cardElement__title">{props.card.name}</h2>
         <div className="cardElement__like">
           <button type="button" className="cardElement__like-button" aria-label="Нравится"></button>
           <p className="cardElement__likes">{props.card.likes.length}</p>

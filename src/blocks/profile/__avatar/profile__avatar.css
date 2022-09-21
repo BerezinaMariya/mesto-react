@@ -2,8 +2,5 @@
     position: relative;
     height: 120px;
     width: 120px;
-    background-position: center;
-    background-size: cover;
     border-radius: 50%;
-    background-repeat: no-repeat;
 }
