@@ -11,7 +11,7 @@ function CardDeletePopup(props) {
   } 
 
   return (
-    <PopupWithForm name="delete-card" title="Вы уверены?" buttonText="Да" isOpen={props.isOpen} onClose={props.onClose} onSubmit={handleSubmit} isLoading={props.isLoading}/>
+    <PopupWithForm name="delete-card" title="Вы уверены?" buttonText="Да" isOpen={props.isOpen} onClose={props.onClose} onCloseByOverlay={props.onCloseByOverlay} onCloseByEsc={props.onCloseByEsc} onSubmit={handleSubmit} onValidation={props.onValidation} isLoading={props.isLoading}/>
   );
 }
                   

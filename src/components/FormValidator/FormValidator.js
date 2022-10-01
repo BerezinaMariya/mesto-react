@@ -10,8 +10,8 @@ export class FormValidator {
       this._form = form;
       this._buttonElement = this._form.querySelector(this._submitButtonSelector);
       this._inputList = Array.from(this._form.querySelectorAll(this._inputSelector));
-    }
-  
+     }
+
     //Функция показа текста ошибки при невалидном заполнении поля формы
     _showInputError(inputElement, errorMessage) {
       // Находим элемент ошибки

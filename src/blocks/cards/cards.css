@@ -2,7 +2,6 @@
     width: 100%;
     max-width: 880px;
     display: grid;
-    list-style-type: none;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
     gap: 20px 17px;

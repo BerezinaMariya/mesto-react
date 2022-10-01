@@ -29,7 +29,7 @@ function Card(props) {
   }
 
   return (
-    <li className="cardElement">
+    <div className="cardElement">
       <img className="cardElement__image" src={props.card.link} onClick={handleClick} alt={`Фотография места ${props.card.name}`}/>
       <div className="cardElement__caption">
         <h2 className="cardElement__title">{props.card.name}</h2>
@@ -39,7 +39,7 @@ function Card(props) {
         </div>
       </div>
       <button type="button" className={cardDeleteButtonClassName} aria-label="Удалить" onClick={handleCardDeleteClick}></button>
-    </li>
+    </div>
   );
 }
               

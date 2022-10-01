@@ -12,18 +12,6 @@ import { api } from '../../utils/Api';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { CardsContext } from '../../contexts/CardsContext';
 
-//Закрытие popup по клику по overlay
-function setEventListeners(popups, closeAllPopups) {
-  popups.forEach((popup) => {
-    popup.addEventListener('mousedown', (evt) => {
-      const targetClasses = evt.target.classList;
-      if (targetClasses.contains('popup_opened')) {
-        closeAllPopups();
-      }
-    });
-  });
-}
-
 function getUserInfo(setCurrentUser) {
   api.getUserInfo()
   .then((res) => {
@@ -120,8 +108,6 @@ function setNewCard(newCard, cards, setCards, setLoading) {
 }
 
 function App() {
-  const popups = document.querySelectorAll('.popup');
-  
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
@@ -131,6 +117,10 @@ function App() {
   const [deletedCard, setDeleteCard] = React.useState({name: '', link: ''});
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
+  
+  function handleValidation(form) {
+    return new FormValidator(form);
+  }
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true);
@@ -151,7 +141,6 @@ function App() {
 
   function handleCardClick(card) {
     setSelectedCard(card);
-    console.log(card.link);
   }
 
   function closeAllPopups() {
@@ -184,47 +173,41 @@ function App() {
     setNewCard(newCard, cards, setCards, setLoading);
   }
 
-  React.useEffect(() => {
-    getUserInfo(setCurrentUser);
-  }, []);
+  //Закрытие popup по клику по overlay
+  function setCloseByOverlayListener(popup) {
+    popup.addEventListener('mousedown', (evt) => {
+      const targetClasses = evt.target.classList;
+      if (targetClasses.contains('popup_opened')) {
+        closeAllPopups();
+      }
+    });
+  }
+
+  //Закрытие popup при нажатии на Esc
+  function handleCloseByEsc(evt) {
+    if (evt.key === 'Escape') {
+      closeAllPopups();
+    }
+  }
 
   React.useEffect(() => {
+    getUserInfo(setCurrentUser);
     getInitialCards(setCards);
   }, []);
 
-  React.useEffect(() => {
-    //Закрытие popup при нажатии на Esc
-    function handleEscClose(evt) {
-      if (evt.key === 'Escape') {
-        closeAllPopups();
-      }
-    }
-
-    // Список действий внутри одного хука
-    document.addEventListener('keydown', handleEscClose);
-
-    // Возвращаем функцию, которая удаляет эффекты
-    return () => {
-      document.removeEventListener('keydown', handleEscClose);
-    }
-  });
-
-  setEventListeners(popups, closeAllPopups);
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
+      <Header />
       <CardsContext.Provider value={cards}>
-        <Header />
         <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick} setCards={setCards} onCardLike={handleCardLike} onCardDeleteClick={handleCardDeleteClick} />
-        <Footer />
-
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isLoading={isLoading} />
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={isLoading}/>
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isLoading={isLoading}/>
-        <CardDeletePopup card={deletedCard} isOpen={isCardDeletePopupOpen} onClose={closeAllPopups} onCardDelete={handleCardDelete} isLoading={isLoading}/>
-        <ImagePopup card={selectedCard}  onClose={closeAllPopups} />
-
       </CardsContext.Provider>
+      <Footer />
+
+      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onCloseByOverlay={setCloseByOverlayListener} onCloseByEsc={handleCloseByEsc} onUpdateAvatar={handleUpdateAvatar} onValidation={handleValidation} isLoading={isLoading} />
+      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onCloseByOverlay={setCloseByOverlayListener} onCloseByEsc={handleCloseByEsc} onUpdateUser={handleUpdateUser} onValidation={handleValidation} isLoading={isLoading} />
+      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onCloseByOverlay={setCloseByOverlayListener} onCloseByEsc={handleCloseByEsc} onAddPlace={handleAddPlaceSubmit} onValidation={handleValidation} isLoading={isLoading} />
+      <CardDeletePopup card={deletedCard} isOpen={isCardDeletePopupOpen} onClose={closeAllPopups} onCloseByOverlay={setCloseByOverlayListener} onCloseByEsc={handleCloseByEsc} onCardDelete={handleCardDelete} onValidation={handleValidation} isLoading={isLoading} />
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} onCloseByOverlay={setCloseByOverlayListener} onCloseByEsc={handleCloseByEsc}/>
     </CurrentUserContext.Provider>
   );
 }

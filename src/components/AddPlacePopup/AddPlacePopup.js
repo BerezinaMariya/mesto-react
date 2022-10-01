@@ -18,7 +18,7 @@ function AddPlacePopup(props) {
     } 
   
     return (
-      <PopupWithForm name="add-card" title="Новое место" buttonText="Создать" isOpen={props.isOpen} onClose={props.onClose} onSubmit={handleSubmit} isLoading={props.isLoading}>
+      <PopupWithForm name="add-card" title="Новое место" buttonText="Создать" isOpen={props.isOpen} onClose={props.onClose} onCloseByOverlay={props.onCloseByOverlay} onCloseByEsc={props.onCloseByEsc} onSubmit={handleSubmit} onValidation={props.onValidation} isLoading={props.isLoading}>
         <input type="text" name="name" id="input-image-title" ref={nameRef} placeholder="Название" className="form__input form__input_data_image-title" required minLength="2" maxLength="30" />
         <span className="input-image-title-error form__input-error"></span>
         <input type="url" name="link" id="input-image-url" ref={linkRef} placeholder="Ссылка на картинку" className="form__input form__input_data_image-url" required />

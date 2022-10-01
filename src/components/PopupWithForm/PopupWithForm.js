@@ -1,9 +1,10 @@
 import React from 'react';
-import { FormValidator } from '../FormValidator/FormValidator';
 
 function PopupWithForm(props) {
   const submitButtonTextRef = React.useRef();
   const formRef = React.useRef();
+  const popupRef = React.useRef();
+  const [validationForm, setValidationForm] = React.useState();
 
   const renderLoading = () => {
     if (!props.isLoading) {
@@ -14,17 +15,30 @@ function PopupWithForm(props) {
   }
 
   React.useEffect(() => {
+    props.onCloseByOverlay(popupRef.current);
+
+    const formValidation = props.onValidation(formRef.current);
+    setValidationForm(formValidation);
+    formValidation.enableValidation();
+  }, []);
+  
+  React.useEffect(() => {
     if (props.isOpen) {
       formRef.current.reset();
-      const formValidation = new FormValidator(formRef.current);
-      formValidation.enableValidation();
-      formValidation.resetValidationFields();
-      formValidation.toggleButtonState();
+      validationForm.toggleButtonState();
+      validationForm.resetValidationFields();
+    
+      // Список действий внутри одного хука
+      document.addEventListener('keydown', props.onCloseByEsc);
+      // Возвращаем функцию, которая удаляет эффекты
+      return () => {
+        document.removeEventListener('keydown', props.onCloseByEsc);
+      }
     }
   }, [props.isOpen]);
 
   return (
-    <div className={`popup popup_action_${props.name} ${props.isOpen ? 'popup_opened' : ''}`} >
+    <div className={`popup popup_action_${props.name} ${props.isOpen ? 'popup_opened' : ''}`} ref={popupRef} >
       <div className="popup__container">
         <button type="button" className="popup__close-button" onClick={props.onClose} aria-label="Закрыть"></button>
         <h3 className="popup__title">{`${props.title}`}</h3>
