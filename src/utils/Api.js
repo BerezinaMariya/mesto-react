@@ -44,12 +44,12 @@ class Api {
   }
 
   //Отправка отредактированного аватара
-  setAvatar(user) {
+  setAvatar(avatar) {
     return fetch(`${this.baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: this.headers,
       body: JSON.stringify({
-        avatar: user.avatar,
+        avatar: avatar,
       })
     })
     .then(this._checkResponse)
@@ -77,22 +77,21 @@ class Api {
     .then(this._checkResponse)
   }
 
-  //Отправка лайка карточки
-  setLike(cardId) {
-    return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
-      method: 'PUT',
-      headers: this.headers
-    })  
-    .then(this._checkResponse)
-  }
-
-  //Удаление лайка карточки
-  deleteLike(cardId) {
-    return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
-      method: 'DELETE',
-      headers: this.headers,
-    })
-    .then(this._checkResponse)
+  //Установка и снятие лайка
+  changeLikeCardStatus(cardId, notLiked) {
+    if (notLiked) {
+      return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+        method: 'PUT',
+        headers: this.headers
+      })
+      .then(this._checkResponse)
+    } else {
+      return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+        method: 'DELETE',
+         headers: this.headers,
+      })
+      .then(this._checkResponse)
+    }
   }
 
 }
